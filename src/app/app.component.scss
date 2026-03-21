@@ -1,0 +1,91 @@
+:host {
+  display: block;
+  background-color: #f0f0f0; 
+  min-height: 100vh; 
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.titulo-app {
+  font-size: 32px;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.icono-auto {
+  display: block;
+}
+
+.cabecera-contenido {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cabecera-logo {
+  font-size: 30px;
+}
+
+.cabecera-titulo {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.contenedor-principal {
+  background-color: #f0f0f0;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.logo-circulo {
+  background-color: #4CAF50; 
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: #FEFEFE;
+  border-bottom: 2px solid #ccc;
+
+  .cabecera-izquierda {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .icono-auto svg {
+      width: 50px;
+      height: 50px;
+    }
+
+    .titulo-header {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2B3E3C;
+    }
+  }
+
+  .logo-sunarp svg {
+    max-width: 150px;
+    height: auto;
+  }
+}
+
+

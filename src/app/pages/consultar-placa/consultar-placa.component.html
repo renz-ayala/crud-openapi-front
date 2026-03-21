@@ -1,0 +1,50 @@
+<div class="contenedor">
+  <h2 class="subtitulo-principal">
+    <span></span> Detalle del proceso de reemplacamiento
+  </h2>
+
+  <h2><span class="asterisco">*</span> Número de Placa</h2>
+
+  <div class="input-group">
+    <span class="icono-input">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="23" height="23">
+        <path d="M5 11L6.5 6.5C6.78 5.67 7.53 5 8.41 5H15.59C16.47 5 17.22 5.67 17.5 6.5L19 11V16C19 16.55 18.55 17 18 17H17C16.45 17 16 16.55 16 16V15H8V16C8 16.55 7.55 17 7 17H6C5.45 17 5 16.55 5 16V11ZM7 9H17L16.06 6.47C15.95 6.18 15.67 6 15.36 6H8.64C8.33 6 8.05 6.18 7.94 6.47L7 9ZM7.5 13C6.67 13 6 13.67 6 14.5C6 15.33 6.67 16 7.5 16C8.33 16 9 15.33 9 14.5C9 13.67 8.33 13 7.5 13ZM16.5 13C15.67 13 15 13.67 15 14.5C15 15.33 15.67 16 16.5 16C17.33 16 18 15.33 18 14.5C18 13.67 17.33 13 16.5 13Z"/>
+      </svg>
+    </span>
+    <input
+      type="text"
+      (input)="filtrarInput($event)"
+      (keyup.enter)="placa().length >= 4 && consultar()"
+      placeholder="ABC123"
+      class="input-placa"
+      maxlength="7"
+    />
+  </div>
+
+  <button (click)="consultar()" [disabled]="cargando() || placa().length == 0 || placa().length < 4" class="btn-buscar">
+    <span class="icono-btn" >
+      <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="currentColor"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+    </span>
+    {{ cargando() ? 'Buscando...' : 'Realizar búsqueda' }}
+  </button>
+
+  @if(mostrarError() && !placa()) {
+    <div class="error">Ingrese un número de placa</div>
+  }
+  
+  <div class="mensaje-resultado">
+
+    @if (resultado() && placa().length>0) {
+      <div class="resultado">
+        <strong>{{ resultado() }}</strong>
+      </div>
+    }
+    
+    @if(error()){
+      <div class="error">
+        {{ error() }}
+      </div>
+    }
+
+  </div>
+</div>
