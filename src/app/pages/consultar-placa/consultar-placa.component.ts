@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { PlacaControllerService } from '../../api';
-import { Response } from '../../api';
+import { PlacaControllerService, PlacaRequest, PlacaResponse } from '../../api';
 
 @Component({
   selector: 'app-consultar-placa',
@@ -38,9 +37,12 @@ export class ConsultarPlacaComponent {
     }
 
     this.cargando.set(true);
-    this.replaqueoService.verificar(this.placa().trim().toUpperCase()).subscribe({
-        next:(respuesta: Response) =>{
-          this.resultado.set(respuesta.resp ? respuesta.resp : 'Sin resultado')
+    const request: PlacaRequest = {
+      numPlaca: this.placa().trim().toUpperCase()
+    }
+    this.replaqueoService.verificar(request).subscribe({
+        next:(respuesta: PlacaResponse) =>{
+          this.resultado.set(respuesta.observaciones ? respuesta.observaciones : 'Sin resultado')
           this.cargando.set(false);
         },
         error: (e) => {

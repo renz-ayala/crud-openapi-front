@@ -10,7 +10,8 @@ encoder.ts
 git_push.sh
 index.ts
 model/models.ts
-model/response.ts
+model/placaRequest.ts
+model/placaResponse.ts
 param.ts
 provide-api.ts
 query.params.ts

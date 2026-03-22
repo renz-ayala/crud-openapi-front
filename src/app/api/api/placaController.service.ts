@@ -17,7 +17,9 @@ import { Observable }                                        from 'rxjs';
 import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 
 // @ts-ignore
-import { Response } from '../model/response';
+import { PlacaRequest } from '../model/placaRequest';
+// @ts-ignore
+import { PlacaResponse } from '../model/placaResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -36,18 +38,18 @@ export class PlacaControllerService extends BaseService {
     }
 
     /**
-     * @endpoint get /placas/placa/{numero}
-     * @param numero 
+     * @endpoint post /placas/verificar
+     * @param placaRequest 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public verificar(numero: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Response>;
-    public verificar(numero: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Response>>;
-    public verificar(numero: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Response>>;
-    public verificar(numero: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (numero === null || numero === undefined) {
-            throw new Error('Required parameter numero was null or undefined when calling verificar.');
+    public verificar(placaRequest: PlacaRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<PlacaResponse>;
+    public verificar(placaRequest: PlacaRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PlacaResponse>>;
+    public verificar(placaRequest: PlacaRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PlacaResponse>>;
+    public verificar(placaRequest: PlacaRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (placaRequest === null || placaRequest === undefined) {
+            throw new Error('Required parameter placaRequest was null or undefined when calling verificar.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -64,6 +66,15 @@ export class PlacaControllerService extends BaseService {
         const localVarTransferCache: boolean = options?.transferCache ?? true;
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -75,11 +86,12 @@ export class PlacaControllerService extends BaseService {
             }
         }
 
-        let localVarPath = `/placas/placa/${this.configuration.encodeParam({name: "numero", value: numero, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/placas/verificar`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<Response>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<PlacaResponse>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                body: placaRequest,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,

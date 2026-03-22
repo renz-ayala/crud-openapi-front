@@ -9,7 +9,7 @@
  */
 
 
-export interface Response { 
-    resp?: string;
+export interface PlacaRequest { 
+    numPlaca?: string;
 }
 
