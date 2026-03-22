@@ -1,54 +1,69 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { PlacaControllerService, PlacaRequest, PlacaResponse } from '../../api';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { catchError, finalize, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-consultar-placa',
-  standalone: false,
+  standalone: true,
+  imports: [ReactiveFormsModule],
   templateUrl: './consultar-placa.component.html',
   styleUrls: ['./consultar-placa.component.scss']
 })
-export class ConsultarPlacaComponent {
-
-  placa = signal('');
-  resultado = signal('');
-  cargando = signal(false);
-  error = signal('');
-  mostrarError = signal(false);
+export class ConsultarPlacaComponent{
 
   private readonly replaqueoService = inject(PlacaControllerService);
+  private readonly fb = inject(FormBuilder);
+
+  resultado = signal('');
+  error = signal(false);
+  isSpinning = signal(false);
+  
+  textoBoton = computed(() => this.isSpinning() ? 'Buscando...' : 'Realizar Búsqueda');
+  cssResultado = computed(() => this.error() ? 'error' : 'resultado')
+
+  form = this.fb.group({
+    placa: ['', [Validators.required, Validators.pattern('^[A-Z0-9Ñ]{6,7}$')]]
+  });
 
   consultar() {
-    this.resultado.set('');
-    this.error.set('');
-    this.mostrarError.set(false);
 
-    if (!this.placa().trim()) {
-      this.mostrarError.set(true);
+    if(this.form.invalid){
+      this.resultado.set('Por favor, ingrese un formato de placa válido.');
+      this.error.set(true);
       return;
     }
 
-    const placa = this.placa().trim().toUpperCase();    
-    const tieneLetra = /[A-Z]/.test(placa);
-    const tieneNumero = /[0-9]/.test(placa);
-    if (!tieneLetra || !tieneNumero) {
-      this.mostrarError.set(true);
-      this.error.set('Error: Formato inválido.');
-      return;
-    }
+    this.resetForm();
+    this.isSpinning.set(true);
 
-    this.cargando.set(true);
     const request: PlacaRequest = {
-      numPlaca: this.placa().trim().toUpperCase()
+      numPlaca: this.form.controls.placa.value?.trim().toUpperCase()
     }
-    this.replaqueoService.verificar(request).subscribe({
+
+    this.replaqueoService.verificar(request).pipe(
+      finalize( () => this.isSpinning.set(false)),
+      catchError((e: HttpErrorResponse) => {
+        console.log(e);
+        let mensajeError = 'Error inesperado';
+        if (e.status === 0) {
+          mensajeError = 'El servidor no responde';
+          this.error.set(true);
+        } else {
+          mensajeError = e.error?.response ?? `Error del servidor: ${e.status}`;
+          this.error.set(!e.error?.response);
+        }
+        return throwError(() => new Error(mensajeError) );
+      })
+    ).subscribe({
         next:(respuesta: PlacaResponse) =>{
           this.resultado.set(respuesta.observaciones ? respuesta.observaciones : 'Sin resultado')
-          this.cargando.set(false);
+          this.error.set(false)
         },
-        error: (e) => {
+        error: (e: Error) => {
           console.error(e);
-          this.error.set('Error consultando placa.');
-          this.cargando.set(false);
+          this.resultado.set(e.message);
         }
       }
     )
@@ -57,14 +72,16 @@ export class ConsultarPlacaComponent {
 
   filtrarInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const valorFiltrado = input.value.toUpperCase().replace(/[^A-Z0-9Ñ]/g, '');
-    this.placa.set(valorFiltrado);
-    input.value = valorFiltrado;
+    const valorFiltrado = input.value.toUpperCase().replaceAll(/[^A-Z0-9Ñ]/g, '');
 
-    if (this.placa().length === 0) {
-      this.resultado.set('');
-      this.error.set('');
-    }
+    this.form.controls.placa.setValue(valorFiltrado, { emitEvent: false} );
+    
+    if(!valorFiltrado) this.resetForm();
+  }
+
+  private resetForm() {
+    this.resultado.set('');
+    this.error.set(false);
   }
 
 }
