@@ -63,6 +63,32 @@
           <span class="tw-block tw-text-[10px] tw-font-black tw-uppercase tw-tracking-widest tw-opacity-60 tw-mb-1">Respuesta:</span>
           <strong class="tw-text-base">{{ resultado() }}</strong>
         </div>
+
+        @if (!error() && tableData()) {
+          <div class="tw-mt-8 tw-p-1 tw-bg-white tw-rounded-3xl tw-border tw-border-slate-100 tw-shadow-sm">
+            <nz-table #basicTable [nzData]="[
+              { key: 'N° PLACA:', value: tableData()?.numPlaca },
+              { key: 'COLOR:', value: tableData()?.color},
+              { key: 'MARCA:', value: tableData()?.marca },
+              { key: 'MODELO:', value: tableData()?.modelo },
+              { key: 'ESTADO:', value: tableData()?.estado },
+              { key: 'ANOTACIONES:', value: tableData()?.observaciones },
+              ]" [nzShowPagination]="false" [nzTemplateMode]="true">
+              <tbody>
+                @for (item of basicTable.data; track $index) {
+                  <tr class="hover:tw-bg-slate-50/50 tw-transition-colors">
+                    <td class="tw-py-5 tw-px-8 tw-text-slate-400 tw-font-black tw-text-[10px] tw-tracking-widest tw-w-1/3">
+                      {{ item.key }}
+                    </td>
+                    <td class="tw-py-5 tw-px-8 tw-text-[#0f172a] tw-font-bold tw-text-sm">
+                      {{ item.value || '---' }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </nz-table>
+          </div>
+        }
       }
     </div>
   </div>

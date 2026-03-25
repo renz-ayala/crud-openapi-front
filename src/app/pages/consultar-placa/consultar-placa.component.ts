@@ -7,6 +7,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-consultar-placa',
@@ -15,7 +16,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzButtonModule,
     NzInputModule,
     NzFormModule,
-    NzIconModule
+    NzIconModule,
+    NzTableModule
   ],
   templateUrl: './consultar-placa.component.html',
   styleUrls: ['./consultar-placa.component.scss']
@@ -28,6 +30,7 @@ export class ConsultarPlacaComponent{
   resultado = signal('');
   error = signal(false);
   isSpinning = signal(false);
+  tableData = signal<PlacaResponse | null>(null);
   
   textoBoton = computed(() => this.isSpinning() ? 'Buscando...' : 'Realizar Búsqueda');
   cssResultado = computed(() => 
@@ -71,8 +74,9 @@ export class ConsultarPlacaComponent{
       })
     ).subscribe({
         next:(respuesta: PlacaResponse) =>{
-          this.resultado.set(respuesta.observaciones ? respuesta.observaciones : 'Sin resultado')
-          this.error.set(false)
+          this.resultado.set(respuesta.response ? respuesta.response : 'Sin resultado')
+          this.tableData.set(respuesta);
+          this.error.set(!respuesta.observaciones);
         },
         error: (e: Error) => {
           console.error(e);
