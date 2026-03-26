@@ -7,7 +7,7 @@
     "local": "ng serve --port 4500",
     "desa": "ng serve --port 4500 --configuration development",
     "prod": "ng serve --port 4500 --configuration production",
-    "build": "ng build",
+    "build": "ng build --base-href /consulta-reemplacamiento-ui/",
     "build:desa": "ng build --base-href /consulta-reemplacamiento-ui/ --configuration development",
     "build:prod": "ng build --base-href /consulta-reemplacamiento-ui/ --configuration production --output-path=dist/consulta-reemplacamiento-ui",
     "watch": "ng build --watch --configuration development",

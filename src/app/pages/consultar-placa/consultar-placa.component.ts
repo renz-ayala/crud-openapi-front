@@ -29,8 +29,8 @@ export class ConsultarPlacaComponent{
 
   resultado = signal('');
   error = signal(false);
-  isSpinning = signal(false);
   tableData = signal<PlacaResponse | null>(null);
+  isSpinning = signal(false);
   
   textoBoton = computed(() => this.isSpinning() ? 'Buscando...' : 'Realizar Búsqueda');
   cssResultado = computed(() => 
@@ -61,7 +61,6 @@ export class ConsultarPlacaComponent{
     this.replaqueoService.verificar(request).pipe(
       finalize( () => this.isSpinning.set(false)),
       catchError((e: HttpErrorResponse) => {
-        console.log(e);
         let mensajeError = 'Error inesperado';
         if (e.status === 0) {
           mensajeError = 'El servidor no responde';
@@ -98,6 +97,7 @@ export class ConsultarPlacaComponent{
 
   private resetForm() {
     this.resultado.set('');
+    this.tableData.set(null);
     this.error.set(false);
   }
 
