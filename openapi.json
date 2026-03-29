@@ -40,6 +40,37 @@
           }
         }
       }
+    },
+    "/placas/obtener-reporte": {
+      "post": {
+        "tags": [
+          "placa-controller"
+        ],
+        "operationId": "getReporte",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlacaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -48,6 +79,9 @@
         "type": "object",
         "properties": {
           "numPlaca": {
+            "type": "string"
+          },
+          "idTransaction": {
             "type": "string"
           }
         }

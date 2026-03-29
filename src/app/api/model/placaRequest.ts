@@ -11,5 +11,6 @@
 
 export interface PlacaRequest { 
     numPlaca?: string;
+    idTransaction?: string;
 }
 

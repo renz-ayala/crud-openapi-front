@@ -6,11 +6,14 @@ import { ApiModule, Configuration } from './api';
 import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http'
 import { AppComponent } from './app.component';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { CarOutline, SearchOutline } from '@ant-design/icons-angular/icons';
+import {NzIconDirective, NzIconModule} from 'ng-zorro-antd/icon';
+import { CarOutline, SearchOutline, DownloadOutline, PrinterOutline,
+  ReloadOutline, DatabaseOutline } from '@ant-design/icons-angular/icons';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { Captcha } from './pages/captcha/captcha';
 
-const icons = [ CarOutline, SearchOutline ];
+const icons = [ CarOutline, SearchOutline, DownloadOutline, PrinterOutline,
+  ReloadOutline, DatabaseOutline ];
 
 export function apiConfig() {
   return new Configuration({
@@ -22,12 +25,14 @@ export function apiConfig() {
   declarations: [
     AppComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    ApiModule.forRoot(apiConfig)
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        ApiModule.forRoot(apiConfig),
+        Captcha,
+        NzIconDirective
+    ],
   providers: [
     provideHttpClient(),
     provideAnimationsAsync(),
